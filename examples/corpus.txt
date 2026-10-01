@@ -1,0 +1,9 @@
+This small original corpus makes the training exercise reproducible.
+Tokens begin as UTF-8 bytes. Common adjacent pairs become new tokens.
+Tokens begin as UTF-8 bytes. Common adjacent pairs become new tokens.
+Words, numbers 123456, punctuation!!! and whitespace have boundaries.
+Words, numbers 123456, punctuation!!! and whitespace have boundaries.
+Hello, world! 안녕하세요! नमस्ते दुनिया! 你好世界! مرحباً بالعالم! Привет мир!
+Emoji can span several bytes: 😀 👩🏽‍💻 🦙 🚀. Café and café are distinct.
+
+	Indentation, repeated   spaces, and line breaks must survive.

@@ -1,0 +1,32 @@
+name: Tokenizer tests
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  native:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      PYTHONUTF8: "1"
+      RUN_COMPAT_TESTS: "1"
+      TIKTOKEN_CACHE_DIR: .tiktoken-cache
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.11.18"
+          enable-cache: true
+      - run: uv sync --locked --extra compat
+      - name: Offline deterministic behavior
+        run: uv run --no-sync pytest -q -m "not integration"
+      - name: Public cl100k table compatibility
+        run: uv run --no-sync pytest -q -m integration
+      - name: Tutorial terminal example
+        run: uv run --no-sync scratchbpe demo
+      - name: Unicode corpus training
+        run: uv run --no-sync scratchbpe train --input examples/corpus.txt --vocab-size 320 --output models/corpus

@@ -1,0 +1,28 @@
+[build-system]
+requires = ["hatchling==1.27.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "gpt-tokenizer-from-scratch"
+version = "1.0.0"
+description = "An educational byte-level BPE tokenizer with regex, special tokens and cl100k compatibility"
+requires-python = ">=3.11,<3.14"
+dependencies = ["regex==2024.11.6"]
+license = "MIT"
+
+[project.optional-dependencies]
+compat = ["tiktoken==0.8.0"]
+
+[dependency-groups]
+dev = ["pytest==8.3.5"]
+
+[project.scripts]
+scratchbpe = "scratchbpe.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/scratchbpe"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["integration: optional cl100k comparison; first run downloads public tokenizer data"]
+addopts = "-ra"
