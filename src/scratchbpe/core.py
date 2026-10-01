@@ -168,7 +168,10 @@ class RegexTokenizer(BasicTokenizer):
     def __init__(self, pattern: str = GPT4_PATTERN) -> None:
         super().__init__()
         self.pattern = pattern
-        self._compiled = regex.compile(pattern)
+        try:
+            self._compiled = regex.compile(pattern)
+        except regex.error as exc:
+            raise ValueError(f"Invalid regex pattern: {exc}") from exc
 
     def split(self, text: str) -> list[str]:
         chunks, cursor = [], 0

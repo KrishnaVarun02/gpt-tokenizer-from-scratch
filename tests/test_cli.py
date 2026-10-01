@@ -44,3 +44,16 @@ def test_invalid_ids_and_missing_model_are_clean_errors(tmp_path):
     assert bad.returncode == 2 and "JSON array" in bad.stderr
     missing = run("encode", tmp_path / "missing.model", "--text", "hi")
     assert missing.returncode == 2 and "error:" in missing.stderr
+
+
+def test_invalid_saved_regex_is_a_clean_error(tmp_path):
+    prefix = tmp_path / "toy"
+    assert run("demo", "--output", prefix).returncode == 0
+    path = tmp_path / "toy.model"
+    model = json.loads(path.read_text(encoding="utf-8"))
+    model["pattern"] = "["
+    path.write_text(json.dumps(model), encoding="utf-8")
+    result = run("encode", path, "--text", "hello")
+    assert result.returncode == 2
+    assert "Invalid regex pattern" in result.stderr
+    assert "Traceback" not in result.stderr
